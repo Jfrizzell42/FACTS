@@ -1,17 +1,31 @@
-import sys, pygame, renderer, tile, player
+import sys
+import pygame
+import renderer
+import eventhandler
+import logic
+import entity
 pygame.init()
 
 n = 10
 m = 10
 
-r = renderer.Renderer(n, m)
+pygame.display.set_caption("First Game")
+clock = pygame.time.Clock()
+game = logic.State()
+r = renderer.Renderer(game)
+
+wtev = True
 
 while 1:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            sys.exit()
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                pygame.event.post(pygame.event.Event(pygame.QUIT))
-
-    r.render()
+    #eventhandler.handle_events(game)
+    game.stateinfo['state'].handle_events()
+    State.resolve_changes()
+    r.render(game)
+    
+    if wtev:
+        game.animations.append(("up", game.get_current_entity()))
+        game.animations.append(("down", game.get_current_entity()))
+        game.animations.append(("down", game.get_current_entity()))
+        game.animations.append(("right", game.get_current_entity()))
+        game.animations.append(("right", game.get_current_entity()))
+        wtev = False
